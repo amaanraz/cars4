@@ -6,14 +6,14 @@ import numpy as np
 # Variables
 min_width = 80
 min_height = 80
-offset = 6 # Allowable error
+offset = 3 # Allowable error
 detect = []
 cars = 0
 
-
 # Start Camera
-cap = cv2.VideoCapture(0)
-cap.set(3,640)
+cap = cv2.VideoCapture(1)
+cap.set(cv2.CAP_PROP_BUFFERSIZE, 2)
+cap.set(3,720)
 cap.set(4,480)
 
 
@@ -47,8 +47,8 @@ while True:
     # cv2.imshow("Detecter", dilatada_2)
 
     # Draw line in video
-    cv2.line(frame1,(25,550),(600,550), (255,127,0), 3)
-    cv2.line(frame1,(700,550),(1100,550), (0,0,255), 3)
+    cv2.line(frame1,(0,300),(320,300), (255,127,0), 3)
+    cv2.line(frame1,(330,300),(720,300), (0,0,255), 3)
 
     # Draw Boxes
     for(i,c) in enumerate(contour):
@@ -63,17 +63,16 @@ while True:
         cv2.circle(frame1,center,4,(0,0,255),-1)
 
         for(x,y) in detect:
-            if ((y < (550+offset)) and (y > (550-offset) and (x > 25) and (x < 600))):
+            if ((y < (300+offset)) and (y > (300-offset) and (x > 0) and (x < 320))):
                 cars+=1
-                cv2.line(frame1,(25,550),(600,550), (0,127,255), 3) 
+                cv2.line(frame1,(0,300),(320,300), (0,127,255), 3) 
                 detect.remove((x,y))
-            elif ((y < (550+offset)) and (y > (550-offset) and (x > 700) and (x < 1100))):
+            elif ((y < (300+offset)) and (y > (300-offset) and (x > 330) and (x < 720))):
                 cars-=1
-                cv2.line(frame1,(700,550),(1100,550), (0,127,255), 3) 
+                cv2.line(frame1,(410,360),(660,360), (0,127,255), 3) 
                 detect.remove((x,y))
 
-
-    cv2.putText(frame1,"Cars: " + str(cars),(450,70),cv2.FONT_HERSHEY_SIMPLEX,2,(122,56,255),5)
+    cv2.putText(frame1,"Cars: " + str(cars),(300,70),cv2.FONT_HERSHEY_SIMPLEX,2,(122,56,255),5)
 
                 
 
@@ -81,8 +80,7 @@ while True:
     # Display the video
     cv2.imshow("Cars 4", frame1)
 
-    if cv2.waitKey(1) == 13:
-        break
+    cv2.waitKey(1) 
 
 # Close all windows and Erase all captures
 cv2.destroyAllWindows()
